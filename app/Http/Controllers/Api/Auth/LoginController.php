@@ -21,7 +21,11 @@ class LoginController extends Controller
             return response()->json(['message' => 'ログイン失敗しました'], 401);
         }
 
-        return response()->json(['message' => 'ログイン成功']);
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json(['message' => 'ログイン成功', 'token' => $token,])
+                ->cookie('auth_token', $token, 60 * 24);
     }
 
     public function logout(Request $request)
